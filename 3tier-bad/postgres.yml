@@ -1,0 +1,13 @@
+- name: install postgres
+  yum:
+    name: postgresql-server
+    state: latest
+- name: enable apache at boot
+  service:
+    name: postgresql
+    enabled: yes
+  notify:
+  - initialize postgres
+  - check postgres config
+
+# ansible_hosts
