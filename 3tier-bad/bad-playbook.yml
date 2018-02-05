@@ -31,7 +31,7 @@
   tasks:
   - include_tasks: haproxy.yml
 
-# # 3
+# 3
 - name: deploy tomcat
   hosts: apps
   gather_facts: true
@@ -42,41 +42,20 @@
     # ansible_hostname: {{ ansible_hostname }}
 
 # 4
-- name: index.html on both apps
-  hosts: apps
-  gather_facts: false
-  become: true
-
-  tasks:
-  - name: create ansible webapp directory
-    file:
-      path: /usr/share/tomcat/webapps/ansible
-      state: directory
-
-  - name: copy static index.html to tomcat webapps/ansible/index.html
-    template:
-      src: index.html.j2
-      dest: /usr/share/tomcat/webapps/ansible/index.html
-
-# 6
 - name: deploy postgres
   gather_facts: false
   become: true
   hosts: appdbs
   tasks:
   - include_tasks: postgres.yml
-
+    tags:
+    - db
+    
   handlers:
   - name: initialize postgres
     command: "postgresql-setup initdb"
   - name: check postgres config
     command: "chkconfig postgresql on"
-
-- name: start postgres
-  hosts: appdbs
-  gather_facts: false
-  become: true
-  tasks:
   - name: start postgres
     service:
       name: postgresql.service

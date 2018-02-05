@@ -9,5 +9,6 @@
   notify:
   - initialize postgres
   - check postgres config
+  - start postgres
 
 # ansible_hosts
